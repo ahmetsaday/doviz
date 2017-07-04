@@ -18,7 +18,7 @@ class ViewController: UIViewController, XMLParserDelegate{
     @IBOutlet weak var lbl_satis: UILabel!
     @IBOutlet weak var kurView: UIView!
     
-    var count = 0
+    var count = 1
     var kurLogo = ["","","",""]
     
     // xml parsing variables
@@ -136,15 +136,33 @@ class ViewController: UIViewController, XMLParserDelegate{
     }
     
     @IBAction func btn_facebook(_ sender: Any) {
-        UIApplication.shared.openURL(NSURL(string: "http://www.facebook.com")! as URL)
+        
+        let url = URL(string: "http://www.facebook.com")!
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
     }
     
     @IBAction func btn_twitter(_ sender: Any) {
-        UIApplication.shared.openURL(NSURL(string: "http://www.twitter.com")! as URL)
+        
+        let url = URL(string: "http://www.twitter.com")!
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
     }
     
     @IBAction func btn_google(_ sender: UIButton) {
-        UIApplication.shared.openURL(NSURL(string: "http://www.plus.google.com")! as URL)
+        
+        let url = URL(string: "http://www.plus.google.com")!
+        if #available(iOS 10.0, *) {
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.openURL(url)
+        }
     }
     @IBAction func btn_back(_ sender: UIButton) {
         
@@ -157,8 +175,8 @@ class ViewController: UIViewController, XMLParserDelegate{
         
         
         dovizBackgroundColor(type: count)
-        kurAlim(item: count)
-        kurSatim(item: count)
+        kurAlim(type: count)
+        kurSatim(type: count)
         count = count + 1
         
         if count >= 4{
@@ -203,7 +221,6 @@ class ViewController: UIViewController, XMLParserDelegate{
             satis.append(string)
         }else if element.isEqual(to: "Durum"){
             durum.append(string)
-            durum.append(string)
         }
     }
     
@@ -228,36 +245,52 @@ class ViewController: UIViewController, XMLParserDelegate{
     // döviz kuru arkaplan rengini ayarlayan fonksiyon
     func dovizBackgroundColor(type: Int){
         
-        if let dict = articles[0] as? Dictionary<String, AnyObject>{
+        if let dict = articles[type] as? Dictionary<String, AnyObject>{
             
             let item = dict["durum"]
-            //print(item!)
+            
             let item2 = item?.replacingOccurrences(of: "*", with: "")
             let cleanItem = item2?.replacingOccurrences(of: "\n", with: "")
             print(cleanItem!)
             
-            if cleanItem == "asagiasagi"{
+            if cleanItem == "asagi"{
                 kurView.backgroundColor = UIColor.red
-            }else{
-                if cleanItem != nil{
-                    kurView.backgroundColor = UIColor.green
-                }
+            }else if cleanItem == "yukari"{
+                kurView.backgroundColor = UIColor.green
             }
             
         }
     }
     
     // döviz kurum alım
-    func kurAlim(item: Int){
-//        if let dict = articles[0] as? Dictionary<String, AnyObject>{
-//            // alım key'in de utf-8 bozuk kodu çekemedim
-//        }
+    func kurAlim(type: Int){
+        if let dict = articles[type] as? Dictionary<String, AnyObject>{
+            
+            var status = 8
+            if type == 3{
+                status = 9
+            }
+            
+            let item = dict["alış"]
+            let item2 = item?.substring(to: (item?.length)! - status)
+            //print(item2 ?? "olmadı")
+            lbl_alis.text = String(describing: item2!)
+        }
     }
     // döviz kurum satım
-    func kurSatim(item: Int){
-//        if let dict = articles[0] as? Dictionary<String, AnyObject>{
-//            // satım key'in de utf-8 bozuk kodu çekemedim
-//        }
+    func kurSatim(type: Int){
+        if let dict = articles[type] as? Dictionary<String, AnyObject>{
+            
+            var status = 8
+            if type == 3{
+                status = 9
+            }
+            
+            let item = dict["satış"]
+            let item2 = item?.substring(to: (item?.length)! - status)
+            //print(item2 ?? "olmadı")
+            lbl_satis.text = String(describing: item2!)
+        }
     }
 }
 
@@ -280,7 +313,36 @@ extension UIView {
         
         self.addSubview(imageViewBackground)
         self.sendSubview(toBack: imageViewBackground)
-    }}
+}
+}
+
+extension String {
+    
+    var length: Int {
+        return self.characters.count
+    }
+    
+    subscript (i: Int) -> String {
+        return self[Range(i ..< i + 1)]
+    }
+    
+    func substring(from: Int) -> String {
+        return self[Range(min(from, length) ..< length)]
+    }
+    
+    func substring(to: Int) -> String {
+        return self[Range(0 ..< max(0, to))]
+    }
+    
+    subscript (r: Range<Int>) -> String {
+        let range = Range(uncheckedBounds: (lower: max(0, min(length, r.lowerBound)),
+                                            upper: min(length, max(0, r.upperBound))))
+        let start = index(startIndex, offsetBy: range.lowerBound)
+        let end = index(start, offsetBy: range.upperBound - range.lowerBound)
+        return self[Range(start ..< end)]
+    }
+    
+}
 
 
 
