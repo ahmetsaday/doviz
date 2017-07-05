@@ -20,7 +20,7 @@ class ViewController: UIViewController, XMLParserDelegate{
     @IBOutlet weak var img_kurLogo: UIImageView!
     
     var count = 1
-    
+    var timer: Timer!
     
     // xml parsing variables
     var articles = NSMutableArray()
@@ -51,6 +51,8 @@ class ViewController: UIViewController, XMLParserDelegate{
         kurLogo(type: 0)
         
         
+        // çalışmıyor
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(parsingDataUrl), userInfo: nil, repeats: true)
         
     }
 
@@ -195,7 +197,7 @@ class ViewController: UIViewController, XMLParserDelegate{
     
     //MARK: - XML Data Parsing
     
-    func parsingDataUrl(){
+    @objc func parsingDataUrl(){
         
         articles = []
         parser = XMLParser(contentsOf: NSURL(string: "http://hakandoviz.com/mobilApp/doviz.xml.php")! as URL)!
