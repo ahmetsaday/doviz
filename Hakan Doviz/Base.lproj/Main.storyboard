@@ -81,7 +81,6 @@
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cdU-17-CdD">
                                         <rect key="frame" x="8" y="8" width="34" height="34"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="34" id="r0Y-AS-pdJ"/>
                                             <constraint firstAttribute="height" constant="34" id="sEV-F6-PZd"/>
@@ -373,6 +372,10 @@
                                     <constraint firstItem="GkL-f9-GtZ" firstAttribute="top" secondItem="gnZ-gt-moo" secondAttribute="top" constant="8" id="xmL-mP-kpU"/>
                                 </constraints>
                             </view>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WTH-1K-kdm">
+                                <rect key="frame" x="0.0" y="110" width="414" height="503"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </webView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hXr-8R-6HV">
                                 <rect key="frame" x="0.0" y="60" width="414" height="50"/>
                                 <subviews>
@@ -405,10 +408,6 @@
                                     <constraint firstItem="hst-gw-vgy" firstAttribute="top" secondItem="hXr-8R-6HV" secondAttribute="top" constant="10" id="zNt-5T-q7A"/>
                                 </constraints>
                             </view>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WTH-1K-kdm">
-                                <rect key="frame" x="0.0" y="110" width="414" height="503"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </webView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -481,6 +480,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="img_kurLogo" destination="cdU-17-CdD" id="OXU-gx-RYD"/>
                         <outlet property="kurView" destination="VUt-Ev-wA2" id="4lW-QF-Ajk"/>
                         <outlet property="lbl_alis" destination="ydQ-iL-qa3" id="1KZ-Nh-9eg"/>
                         <outlet property="lbl_satis" destination="tCP-Q3-UOI" id="NRd-Ju-mEH"/>

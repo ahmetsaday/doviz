@@ -17,9 +17,10 @@ class ViewController: UIViewController, XMLParserDelegate{
     @IBOutlet weak var lbl_alis: UILabel!
     @IBOutlet weak var lbl_satis: UILabel!
     @IBOutlet weak var kurView: UIView!
+    @IBOutlet weak var img_kurLogo: UIImageView!
     
     var count = 1
-    var kurLogo = ["","","",""]
+    
     
     // xml parsing variables
     var articles = NSMutableArray()
@@ -43,8 +44,13 @@ class ViewController: UIViewController, XMLParserDelegate{
         parsingDataUrl()
         print(articles)
         
-        // 0 dolar, 1 euro, 2 eu/dr, 3 ons
+        // kur ile alakalı fonksiyonlar bir kez çağırılıyor.
         dovizBackgroundColor(type: 0)
+        kurAlim(type: 0)
+        kurSatim(type: 0)
+        kurLogo(type: 0)
+        
+        
         
     }
 
@@ -167,6 +173,7 @@ class ViewController: UIViewController, XMLParserDelegate{
     @IBAction func btn_back(_ sender: UIButton) {
         
         invisible()
+        webview.loadRequest(URLRequest(url: URL(string: "about:blank")!))
     }
     
     // her tıklandığında count a göre döviz kuru datası seçip gösterecek. 
@@ -177,6 +184,7 @@ class ViewController: UIViewController, XMLParserDelegate{
         dovizBackgroundColor(type: count)
         kurAlim(type: count)
         kurSatim(type: count)
+        kurLogo(type: count)
         count = count + 1
         
         if count >= 4{
@@ -251,7 +259,7 @@ class ViewController: UIViewController, XMLParserDelegate{
             
             let item2 = item?.replacingOccurrences(of: "*", with: "")
             let cleanItem = item2?.replacingOccurrences(of: "\n", with: "")
-            print(cleanItem!)
+            //print(cleanItem!)
             
             if cleanItem == "asagi"{
                 kurView.backgroundColor = UIColor.red
@@ -292,6 +300,15 @@ class ViewController: UIViewController, XMLParserDelegate{
             lbl_satis.text = String(describing: item2!)
         }
     }
+    // kur logosu
+    func kurLogo(type: Int){
+        
+        var logos = ["1408929582_twitter.png","1408929571_google-plus.png","1408929588_facebook.png","btn-faiz.png"]
+        img_kurLogo.image = UIImage(named: logos[type])
+      
+    }
+    
+    
 }
 
 
