@@ -19,7 +19,7 @@ class ViewController: UIViewController, XMLParserDelegate{
     @IBOutlet weak var kurView: UIView!
     @IBOutlet weak var img_kurLogo: UIImageView!
     
-    var count = 1
+    var count = 0
     var timer: Timer!
     
     // xml parsing variables
@@ -51,8 +51,10 @@ class ViewController: UIViewController, XMLParserDelegate{
         kurLogo(type: 0)
         
         
-        // çalışmıyor
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(parsingDataUrl), userInfo: nil, repeats: true)
+        // 60 saniyede bir data çekiyor.
+        timer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(ViewController.repeatData), userInfo: nil, repeats: true)
+
+
         
     }
 
@@ -187,22 +189,24 @@ class ViewController: UIViewController, XMLParserDelegate{
         kurAlim(type: count)
         kurSatim(type: count)
         kurLogo(type: count)
-        count = count + 1
+        self.count = count + 1
         
         if count >= 4{
-            count = 0
+            self.count = 0
         }
         
     }
     
     //MARK: - XML Data Parsing
     
-    @objc func parsingDataUrl(){
+    func parsingDataUrl(){
         
         articles = []
         parser = XMLParser(contentsOf: NSURL(string: "http://hakandoviz.com/mobilApp/doviz.xml.php")! as URL)!
         parser.delegate = self
         parser.parse()
+        
+        print(articles)
     }
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
@@ -264,9 +268,9 @@ class ViewController: UIViewController, XMLParserDelegate{
             //print(cleanItem!)
             
             if cleanItem == "asagi"{
-                kurView.backgroundColor = UIColor.red
+                kurView.backgroundColor = UIColor(red: 217.0/255, green: 83.0/255, blue: 79.0/255, alpha: 1.0)
             }else if cleanItem == "yukari"{
-                kurView.backgroundColor = UIColor.green
+                kurView.backgroundColor = UIColor(red: 92.0/255, green: 184.0/255, blue: 92.0/255, alpha: 1.0)
             }
             
         }
@@ -308,6 +312,19 @@ class ViewController: UIViewController, XMLParserDelegate{
         var logos = ["1408929582_twitter.png","1408929571_google-plus.png","1408929588_facebook.png","btn-faiz.png"]
         img_kurLogo.image = UIImage(named: logos[type])
       
+    }
+    
+    // repeat function
+    
+    func repeatData(){
+        parsingDataUrl()
+        
+        // kur ile alakalı fonksiyonlar bir kez çağırılıyor.
+        dovizBackgroundColor(type: count)
+        kurAlim(type: count)
+        kurSatim(type: count)
+        kurLogo(type: count)
+        
     }
     
     
